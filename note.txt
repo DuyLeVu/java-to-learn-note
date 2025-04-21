@@ -1,0 +1,57 @@
+Chapter 8. Generic Programming
+	Các lớp và phương thức chung có tham số kiểu -> Generic classes, generic methods và tham số kiểu
+	Trước khi có Generic Class, sử dụng Object để viết mã hoạt động chung cho nhiều loại khác nhau -> cồng kềnh, không an toàn
+	Ra đời từ Java 5 và tạo thành sự thay đổi đáng kể nhất trong nnlt java kể từ lần phát hành đầu tiên
+1. Why Generic Programming
+	Generic Programming có nghĩa là viết mã có thể được sử dụng lại cho các đối tượng thuộc nhiều loại khác nhau
+	1. The advantage of type parameters - Lợi thế của tham số kiểu
+		Trước khi các Generic Class được thêm vào Java, lập trình chung đã đạt được với kế thừa. Lớp ArrayList chỉ đơn giản là duy trì một mảng tham chiếu Object (Các lớp kế thừa từ Object thay thế cho kiểu T)
+		-> Cách tiếp cận này có hai vấn đề:
+			- Cần Cast bất cứ khi nào truy xuất giá trị
+				- ArrayList files = new ArrayList(); . . .
+					String fileName = (String) files.get(0);
+			- không có kiểm tra lỗi. Bạn có thể thêm giá trị của bất kỳ lớp nào
+				- files.add(new File(". . .")); -> Biên dịch và chạy không có lỗi, việc truyền kết quả của get thành một String sẽ gây ra lỗi.
+		-> Generics cung cấp 1 giải pháp tốt hơn: tham số kiểu. Ex: ArrayList hiện có một tham số kiểu cho biết kiểu phần tử: var files = new ArrayList<String>();
+	2. Who Wants to Be a Generic Programmer?
+2. Defining a Simple Generic Class
+	NOTE: Thông thường sử dụng chữ hoa cho các biến kiểu và giữ chúng ngắn. Thư viện Java sử dụng biến E cho kiểu phần tử của một bộ sưu tập, K và V cho các kiểu khóa và giá trị của bảng, và T (và các chữ cái lân cận U và S, nếu cần) cho "bất kỳ loại nào".
+	// impl code
+3. Generic Methods
+	- Bạn có thể định nghĩa các generic methods cả bên trong các ordinary classes and inside generic classes
+	Khi bạn gọi một phương thức chung, bạn có thể đặt các kiểu thực tế, được đặt trong dấu ngoặc góc, trước tên phương thức:
+		String middle = ArrayAlg.<String>getMiddle("John", "Q.", "Public");
+8.5 Generic Code and the Virtual Machine
+	Máy ảo không có các đối tượng thuộc kiểu chung, Trong phần này, bạn sẽ thấy cách trình biên dịch "xóa" các tham số kiểu và ý nghĩa của quá trình đó đối với các lập trình viên Java
+	8.5.1 Type Erasure
+	8.5.2. Translating Generic Expressions
+		- Khi gọi một Generic method. Compiler sẽ chèn các kiểu raw type sau khi T bị "xóa đi"
+		- Vd: Hãy xem các câu lệnh sau: 
+			Pair<Employee> buddies = . . .;
+			Employee buddy = buddies.getFirst();
+			trình biên dịch dịch lệnh gọi phương thức thành hai lệnh máy ảo:
+			1. Một lệnh gọi đến phương thức thô Pair.getFirst
+			2. Ép kiểu trả về object đến kiểu Employee
+	8.5.3 Translating Generic Methods
+		Xóa kiểu (type erasure) cũng xảy ra đối với các phương thức: 
+			public static <T extends Comparable> T min(T[] a) -> public static Comparable min(Comparable[] a)
+	Tóm lại, bạn cần nhớ những sự thật này về dịch Java generic:
+		1. Không có generic trong máy ảo, chỉ có các lớp và phương thức thông thường.
+		2. Tất cả các tham số kiểu được thay thế bằng giới hạn của chúng.
+		3. Các Bridge methods sự dụng để bảo đảm tính đa hình khi xóa kiểu
+		4. Cast để duy trì type safety
+	4. Calling Legacy Code
+8.6 Restrictions and Limitations (Một số hạn chế khi làm việc với Generics)
+	8.6.1 Type Parameters Cannot Be Instantiated with Primitive Types
+	- không thể thay thế một kiểu nguyên thủy cho một tham số kiểu, do đó không có Pair<double> chỉ có Pair<Double>
+	8.6.2 Runtime Type Inquiry Only Works with Raw Types
+	-
+	8.6.3 You Cannot Create Arrays of Parameterized Types
+	-Bạn không thể khởi tạo các mảng của các kiểu tham số hóa. VD: var table = new Pair<String>[10]; // ERROR
+	8.6.4 Varargs Warnings
+	8.6.5 You Cannot Instantiate Type Variables
+	7. Type Variables Are Not Valid in Static Contexts of Generic Classes
+	8.  You Cannot Throw or Catch Instances of a Generic Class
+		- Không thể throw hoặc catch các đối tượng của 1 lớp Generic
+		- 
+Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ thể hơn là đưa ra 1 số bài tập để viết các hàm có liên quan đến 1 chương trình xây dựng web socket được viết bằng java core
