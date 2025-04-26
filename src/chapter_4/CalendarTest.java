@@ -1,7 +1,9 @@
 package chapter_4;
 
+import java.sql.SQLOutput;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 
 public class CalendarTest {
     public static void main(String[] args) {
@@ -22,5 +24,9 @@ public class CalendarTest {
             date = date.plusDays(1);
             if (date.getDayOfWeek().getValue() == 1) System.out.println();
         }
+    }
+
+    public static void printNames(List<? extends Employee> employees) {
+        employees.forEach(employee -> System.out.println(employee.getName()));
     }
 }

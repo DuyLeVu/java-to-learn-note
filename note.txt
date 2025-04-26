@@ -54,4 +54,16 @@ Chapter 8. Generic Programming
 	8.  You Cannot Throw or Catch Instances of a Generic Class
 		- Không thể throw hoặc catch các đối tượng của 1 lớp Generic
 		- 
+8.8. Wildcard Types - kiểu đại diện bằng ký tự đại diện
+	- 
+	- Wildcard là ký hiệu ? dùng trong generic để nói rằng kiểu dữ liệu có thể là bất kỳ kiểu nào, và chúng ta có thể giới hạn nó bằng từ khóa extends (kế thừa) hoặc super (cha).
+	-  ? extends T (Wildcard với ràng buộc trên - bounded wildcard) - dùng để chỉ một kiểu chưa xác định nhưng phải là con của T, ví dụ như Pair<? extends Employee>.
+	8.8.1. The Wildcard Concept 
+		- Đây là một cơ chế mà Java cung cấp để làm cho hệ thống kiểu dữ liệu generic trở nên linh hoạt hơn khi làm việc với các lớp kế thừa.
+		- Tại sao không set được giá trị? 
+			- Vì wildcardPair có thể là Pair<Manager>, mà Employee không phải là Manager → không an toàn để set. 
+				Compiler chỉ biết rằng kiểu là "một cái gì đó mở rộng từ Employee", nhưng không biết rõ là loại nào, nên sẽ không cho phép bạn gán bất kỳ đối tượng nào, ngoại trừ null.
+		- Nhưng vẫn có thể get ra:
+	
+
 Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ thể hơn là đưa ra 1 số bài tập để viết các hàm có liên quan đến 1 chương trình xây dựng web socket được viết bằng java core
