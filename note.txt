@@ -64,6 +64,7 @@ Chapter 8. Generic Programming
 			- Vì wildcardPair có thể là Pair<Manager>, mà Employee không phải là Manager → không an toàn để set. 
 				Compiler chỉ biết rằng kiểu là "một cái gì đó mở rộng từ Employee", nhưng không biết rõ là loại nào, nên sẽ không cho phép bạn gán bất kỳ đối tượng nào, ngoại trừ null.
 		- Nhưng vẫn có thể get ra:
-	
+	8.8.4 Wildcard Capture (11/5):
+		- Một wilcard không phải là biến kiểu, vì vậy chúng ta không thể viết mã sử dụng ? như một kiểu
 
 Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ thể hơn là đưa ra 1 số bài tập để viết các hàm có liên quan đến 1 chương trình xây dựng web socket được viết bằng java core
