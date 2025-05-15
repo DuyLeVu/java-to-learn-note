@@ -67,4 +67,34 @@ Chapter 8. Generic Programming
 	8.8.4 Wildcard Capture (11/5):
 		- Một wilcard không phải là biến kiểu, vì vậy chúng ta không thể viết mã sử dụng ? như một kiểu
 
+
+
 Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ thể hơn là đưa ra 1 số bài tập để viết các hàm có liên quan đến 1 chương trình xây dựng web socket được viết bằng java core
+
+
+15/5:
+9. Collections
+	1. The Java Collections Framework
+		1. Separating Collection Interfaces and Implementation (tách rời Interfaces và triển khai impl)
+			- Java Collection tách biệt các giao diện và triển khai. Hãy cùng nhìn vào sự phân tách đó với một cấu trúc dữ liệu quen thuộc, hàng đợi - Queue.
+				- A queue interface chỉ ra rằng bạn có thể thêm 1 phần tử vào đuôi, lấy ra 1 phần tử ở đầu, có bao nhiêu phần tử trong Queue,...
+				- Ví dụ: public interface Queue<E> // a simplified form of the interface in the standard library
+					{
+ 					  void add(E element);
+ 					  E remove();
+ 					  int size();
+					}
+				- Interface không cho biết về cách triển khai cụ thể (Impl). Trong hai cách triển khai phổ biến của Queue là sử dụng Circular Array và LinkedList
+					Khi bạn sử dụng một hàng đợi trong chương trình của mình, bạn không cần phải biết triển khai nào thực sự được sử dụng khi Collection đã được xây dựng. 
+					Do đó, thật hợp lý khi chỉ sử dụng lớp cụ thể khi bạn xây dựng đối tượng tập hợp. Hãy sử dụng kiểu giao diện để giữ tham chiếu đến tập hợp.
+
+						Queue<Customer> expressLane = new CircularArrayQueue<>(100);
+						expressLane.add(new Customer("Harry"));
+				- Với cách tiếp cận này, nếu bạn thay đổi suy nghĩ, bạn có thể dễ dàng sử dụng một triển khai khác. Bạn chỉ cần thay đổi chương trình của mình ở một nơi - trong lời gọi hàm khởi tạo. Nếu bạn quyết định rằng một LinkedListQueue là lựa chọn tốt hơn sau tất cả, mã của bạn trở thành
+
+
+				Tại sao bạn lại chọn một triển khai này hơn một triển khai khác? 
+					Interface không nói gì về hiệu quả của một triển khai. Circular array là hơi hiệu quả hơn Linked List, vì vậy nó thường được ưa chuộng hơn. 
+					Tuy nhiên, như thường lệ, có một cái giá phải trả. Mảng vòng là một tập hợp có giới hạn - nó có một dung lượng hữu hạn (capacity). Nếu bạn không có giới hạn một cách rõ ràng về số lượng đối tượng mà chương trình của bạn sẽ thu thập, có thể bạn sẽ tốt hơn với một triển khai danh sách liên kết. 
+				Khi bạn nghiên cứu tài liệu API, bạn sẽ tìm thấy một bộ lớp khác có tên bắt đầu bằng Abstract, chẳng hạn như AbstractQueue. Những lớp này dành cho những người triển khai thư viện. 
+					Trong trường hợp (có thể hiếm xảy ra) mà bạn muốn triển khai lớp hàng đợi riêng của mình, bạn sẽ thấy dễ dàng hơn khi mở rộng AbstractQueue hơn là triển khai tất cả các phương thức của giao diện Queue.
