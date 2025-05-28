@@ -98,3 +98,142 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 					Tuy nhiên, như thường lệ, có một cái giá phải trả. Mảng vòng là một tập hợp có giới hạn - nó có một dung lượng hữu hạn (capacity). Nếu bạn không có giới hạn một cách rõ ràng về số lượng đối tượng mà chương trình của bạn sẽ thu thập, có thể bạn sẽ tốt hơn với một triển khai danh sách liên kết. 
 				Khi bạn nghiên cứu tài liệu API, bạn sẽ tìm thấy một bộ lớp khác có tên bắt đầu bằng Abstract, chẳng hạn như AbstractQueue. Những lớp này dành cho những người triển khai thư viện. 
 					Trong trường hợp (có thể hiếm xảy ra) mà bạn muốn triển khai lớp hàng đợi riêng của mình, bạn sẽ thấy dễ dàng hơn khi mở rộng AbstractQueue hơn là triển khai tất cả các phương thức của giao diện Queue.
+		2. The Collection interface
+			Collection Interface có 2 phương thức cơ bản:
+				public interface Collection<E>
+					{
+   						boolean add(E element);
+   						Iterator<E> iterator();
+	   						. . .
+					}
+				Phương pháp iterator trả về một đối tượng thực hiện giao diện Iterator. Bạn có thể sử dụng đối tượng iterator để truy cập các phần tử trong Collection từng cái một
+		3. Iterators
+			Iterator interface có 4 method:
+			The Iterator interface has four methods:
+				public interface Iterator<E>
+					{
+   						E next();
+   						boolean hasNext();
+   						void remove();
+   						default void forEachRemaining(Consumer<? super E> action);
+					}
+			Bằng cách lập lại việc gọi phương thức next, bạn có thể duyệt qua các phần tử trong tập hợp một cách từng cái một. Tuy nhiên, nếu bạn đến cuối tập hợp, phương thức next sẽ ném ra một ngoại lệ NoSuchElementException. 
+			Do đó, bạn cần gọi phương thức hasNext trước khi gọi next. Phương thức đó trả về true nếu đối tượng lập iterator còn có nhiều phần tử để duyệt. 
+			Nếu bạn muốn kiểm tra tất cả các phần tử trong một tập hợp, hãy yêu cầu một iterator và sau đó tiếp tục gọi phương thức next trong khi hasNext trả về true. Ví dụ:
+				Collection<String> c = . . .;
+				Iterator<String> iter = c.iterator();
+				while (iter.hasNext())
+					{
+ 						 String element = iter.next();
+						do something with element
+					}
+			You can write such a loop more concisely as the “for each” loop:
+				for (String element : c)
+					{
+						do something with element
+					}
+		4.  Generic Utility Methods
+
+			Trên thực tế, giao diện Collection tuyên bố khá nhiều phương thức hữu ích mà tất cả các lớp triển khai phải cung cấp. Trong số đó có:
+				int size()
+					boolean isEmpty()
+					boolean contains(Object obj)
+					boolean containsAll(Collection<?> c)
+					boolean equals(Object other)
+					boolean addAll(Collection<? extends E> from)
+					boolean remove(Object obj)
+					boolean removeAll(Collection<?> c)
+					void clear()
+					boolean retainAll(Collection<?> c)
+					Object[] toArray()
+	2. Interfaces in the Collections Framework
+		Có hai giao diện cơ bản cho các Collections Framework: Collection và Map
+			bạn chèn các phần tử vào một Collection bằng một phương thức - boolean add(E element). 
+			Tuy nhiên, Map lưu trữ các cặp khóa/giá trị, và bạn sử dụng phương thức put để chèn - V put(K key, V value).
+			Để đọc các phần tử từ một Collection, hãy truy cập chúng bằng một iterator. Tuy nhiên, bạn có thể đọc giá trị từ một bản đồ bằng phương thức get: V get(K key)
+			
+			List là một  tập hợp có thứ tự. Các phần tử được thêm vào một vị trí cụ thể trong container. 
+				Một phần tử có thể được truy cập bằng hai cách: bằng một bộ lặp (iterator) hoặc bằng một chỉ số số nguyên. 
+				Cách thứ hai được gọi là truy cập ngẫu nhiên vì các phần tử có thể được truy cập theo bất kỳ thứ tự nào. 
+				Ngược lại, khi sử dụng một iterator, người ta phải truy cập chúng tuần tự.
+	3. Concrete Collections
+		1. LinkedList và Iterator.
+		a.Bản chất LinkedList
+			
+				LinkedList là một cấu trúc dữ liệu danh sách liên kết (linked list) – một dạng Collection có thứ tự rõ ràng, trong đó vị trí của các phần tử là quan trọng. Phương thức add() của LinkedList mặc định sẽ thêm phần tử vào cuối danh sách.
+				Tuy nhiên, trong nhiều trường hợp, bạn cần chèn phần tử ở giữa danh sách. Việc thêm phần tử dựa trên vị trí cụ thể không do phương thức add() của Collection xử lý, mà được thực hiện thông qua iterator, cụ thể là ListIterator.
+			ListIterator – mở rộng Iterator
+				b. ListIterator là một subinterface của Iterator có khả năng:
+
+					Thêm phần tử tại vị trí con trỏ.
+
+					Duyệt ngược danh sách.	
+					interface ListIterator<E> extends Iterator<E> {
+    						void add(E element);       // thêm phần tử tại vị trí iterator
+    						E previous();              // duyệt ngược
+    						boolean hasPrevious();     // kiểm tra còn phần tử phía trước không
+   						 ...
+					}
+					Khác với Collection.add, phương thức add() của ListIterator không trả về boolean vì mặc định luôn thực hiện thành công.
+				c. Duyệt và thêm phần tử vào giữa danh sách
+
+					Bạn có thể sử dụng phương thức listIterator() của LinkedList để lấy iterator hỗ trợ thêm/xóa/phân tích vị trí phần tử.
+					Vd: var staff = new LinkedList<String>();
+						staff.add("Amy");
+						staff.add("Bob");
+						staff.add("Carl");
+
+						ListIterator<String> iter = staff.listIterator();
+						iter.next();            // bỏ qua phần tử đầu tiên (Amy)
+						iter.add("Juliet");    // chèn "Juliet" trước phần tử thứ hai (Bob)
+					Nếu gọi add() nhiều lần liên tiếp, các phần tử được thêm trước vị trí hiện tại của iterator, theo đúng thứ tự gọi.
+				d. Các vị trí chèn trong LinkedList
+					Với danh sách gồm n phần tử, sẽ tồn tại n + 1 vị trí có thể chèn phần tử mới — tương ứng với các vị trí giữa các phần tử hoặc ở đầu/cuối danh sách:
+					Ví dụ: Danh sách gồm 3 phần tử A, B, C Có 4 vị trí chèn hợp lệ:1, 2, 3, 4
+						Vị trí 0: thêm vào đầu danh sách.
+						Vị trí 3: thêm vào cuối danh sách.
+						Các vị trí giữa: chèn vào giữa 2 phần tử.
+		=> Trong các ứng dụng cần thao tác danh sách động như hàng đợi, undo/redo, danh sách phát (playlist),... LinkedList và ListIterator là một lựa chọn mạnh mẽ.
+			
+				f. vấn đề khi nhiều iterator cùng lúc truy cập và sửa đổi một collection, điều này có thể gây ra lỗi. Java đã thiết kế các iterator (đặc biệt là iterator của LinkedList) để phát hiện những thay đổi không hợp lệ này, và nếu phát hiện, chúng sẽ ném ra ngoại lệ ConcurrentModificationException
+					Khi bạn sử dụng nhiều iterator để duyệt qua cùng một danh sách, nếu một trong số chúng thay đổi danh sách (ví dụ như xoá hoặc thêm phần tử), thì các iterator còn lại sẽ "bị lệch" vì vị trí mà chúng lưu giữ không còn hợp lệ nữa.
+					Cơ chế kiểm tra rất đơn giản:
+
+						Collection giữ một "biến đếm" số lần bị thay đổi.
+
+						Mỗi iterator cũng giữ bản sao biến đếm này tại thời điểm nó được tạo.
+
+						Trước mỗi thao tác (next(), remove()...), iterator sẽ kiểm tra xem biến đếm của nó có còn khớp với Collection không. Nếu không khớp, tức là danh sách đã bị thay đổi bên ngoài, thì ném lỗi.
+
+						Cách tránh lỗi này:
+
+							Nếu bạn chỉ đọc: dùng bao nhiêu iterator cũng được.
+
+							Nếu bạn cần xoá hoặc thêm: chỉ dùng một iterator duy nhất để vừa đọc vừa ghi.
+						Tong hop:
+							Không được thay đổi danh sách bằng nhiều iterator cùng lúc.
+
+							Nếu một iterator sửa đổi danh sách, những iterator khác sẽ bị lỗi nếu tiếp tục sử dụng.
+
+							Java phát hiện việc sửa đổi đồng thời bằng cách so sánh số lần sửa đổi giữa Collection và từng Iterator.
+
+							Chỉ nên dùng một iterator nếu cần sửa danh sách, hoặc nhiều iterator nếu chỉ đọc.
+					có một ngoại lệ thú vị trong cơ chế phát hiện thay đổi đồng thời: phương thức set() không được xem là thay đổi cấu trúc của danh sách. Điều này có nghĩa là bạn có thể dùng nhiều iterator cùng lúc để thay đổi nội dung phần tử hiện tại của danh sách mà không gây lỗi.
+						Phương thức set() được phép gọi từ nhiều iterator mà không gây lỗi.
+
+						Miễn là bạn không thêm hoặc xoá phần tử, bạn có thể sử dụng nhiều iterator để cập nhật nội dung phần tử.
+
+						Đây là hành vi được thiết kế cố ý để hỗ trợ các thuật toán cập nhật dữ liệu hiệu quả.	
+			g. Danh sách liên kết không hỗ trợ truy cập ngẫu nhiên nhanh chóng. 
+				Nếu bạn muốn xem phần tử thứ n của danh sách liên kết, bạn phải bắt đầu từ đầu và bỏ qua n - 1 phần tử đầu tiên. Không có lối tắt nào cả. 
+				Vì lý do đó, các lập trình viên thường không sử dụng danh sách liên kết trong những trường hợp mà các phần tử cần được truy cập bởi chỉ số nguyên.
+			Bạn không nên bao giờ sử dụng phương pháp truy cập ngẫu nhiên ảo này (get()) để duyệt qua danh sách liên kết. 
+				for (int i = 0; i < list.size(); i++) thực hiện điều gì đó với list.get(i); là cực kỳ không hiệu quả. 
+				Mỗi lần bạn tìm kiếm một phần tử khác , quá trình tìm kiếm (get()) lại bắt đầu từ đầu danh sách.
+				- Phương thức get có một tối ưu hóa nhẹ: Nếu chỉ số ít nhất bằng kích thước() / 2, việc tìm kiếm phần tử bắt đầu từ cuối danh sách.
+			If you want random access into a collection, use an array or ArrayList, not a linked list.
+		2. 
+
+
+
+
