@@ -232,8 +232,24 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 				Mỗi lần bạn tìm kiếm một phần tử khác , quá trình tìm kiếm (get()) lại bắt đầu từ đầu danh sách.
 				- Phương thức get có một tối ưu hóa nhẹ: Nếu chỉ số ít nhất bằng kích thước() / 2, việc tìm kiếm phần tử bắt đầu từ cuối danh sách.
 			If you want random access into a collection, use an array or ArrayList, not a linked list.
-		2. 
-
-
+		2. ArrayList
+			- Iterface List mô tả một tập hợp có thứ tự mà trong đó vị trí của các phần tử rất quan trọng. Có hai quy trình để truy cập các phần tử: thông qua một bộ lặp và bằng cách truy cập ngẫu nhiên với các phương thức get và set. Get set không phù hợp cho Linked List, nhưng tất nhiên get và set rất hợp lý cho các mảng. 
+			- Thư viện collections cung cấp lớp ArrayList quen thuộc cũng thực hiện Interface List. 
+			- Một ArrayList bao encapsulates một mảng đối tượng được cấp phát lại một cách động.
+			- Lưu ý: Nếu bạn là một lập trình viên Java kỳ cựu, có thể bạn đã sử dụng lớp Vector mỗi khi cần một mảng động. 
+					Tại sao nên sử dụng ArrayList thay vì Vector? Có một lý do đơn giản: Tất cả các phương thức của lớp Vector đều được đồng bộ hóa. Việc truy cập một đối tượng Vector từ hai luồng là an toàn. Nhưng nếu bạn chỉ truy cập một vector từ một luồng duy nhất – trường hợp phổ biến hơn rất nhiều – mã của bạn lãng phí khá nhiều thời gian cho việc đồng bộ hóa. Ngược lại, các phương thức của ArrayList không được đồng bộ hóa. 
+				- Tôi khuyên bạn nên sử dụng một ArrayList thay vì một Vector bất cứ khi nào bạn không cần đồng bộ hóa.
+		3. Hash Sets
+			- 
+		4. TreeSet
+			- Lớp TreeSet tương tự như HashSet, với một cải tiến bổ sung. Một TreeSet là một tập hợp đã được sắp xếp. 
+			Bạn có thể chèn các phần tử vào set theo bất kỳ thứ tự nào. Khi bạn lặp qua set, các giá trị sẽ tự động được trình bày theo thứ tự đã sắp xếp.
+		5. Queues and Deques
+			Như chúng ta đã thảo luận, hàng đợi cho phép bạn thêm phần tử một cách hiệu quả ở đuôi và loại bỏ phần tử từ đầu. 
+			Hàng đợi hai đầu - deque, cho phép bạn thêm hoặc loại bỏ phần tử một cách hiệu quả ở đầu và đuôi. Việc thêm phần tử vào giữa không được hỗ trợ. 
+			Java 6 đã giới thiệu một giao diện Deque - Nó được triển khai bởi các lớp ArrayDeque và LinkedList, cả hai đều cung cấp deque có kích thước tự động tăng khi cần.
+		6. Priority Queues
+		7. Maps
+			
 
 
