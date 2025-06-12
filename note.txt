@@ -249,7 +249,24 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 			Hàng đợi hai đầu - deque, cho phép bạn thêm hoặc loại bỏ phần tử một cách hiệu quả ở đầu và đuôi. Việc thêm phần tử vào giữa không được hỗ trợ. 
 			Java 6 đã giới thiệu một giao diện Deque - Nó được triển khai bởi các lớp ArrayDeque và LinkedList, cả hai đều cung cấp deque có kích thước tự động tăng khi cần.
 		6. Priority Queues
-		7. Maps
+	4. Maps
+		1. Basic Map Operations
+			GPT notes
+			Ex: Coding map test
+		2. Updating Map Entries
+			GPT notes
+		3. Map Views
+			GPT notes - 3 views để thao tác với Map như 1 Collection
+		4. Weak Hash Maps
+			GPT notes - Cách kết hợp GC và Weak Hash Maps để quản lý bộ nhớ, hạn chế memory leak
+		5 Linked Hash Sets and Maps
+		6. Enumeration Sets and Maps
+		7. Identity Hash Maps
+	5. Copies & Views
+		1. Small Collections
+			GPT notes
+
+
 			
 
 
