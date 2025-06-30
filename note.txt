@@ -265,6 +265,7 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 	5. Copies & Views
 		1. Small Collections
 			GPT notes
+	6. Algorithms
 
 
 			
