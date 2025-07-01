@@ -266,7 +266,37 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 		1. Small Collections
 			GPT notes
 	6. Algorithms
-
+		1. Why Generic Algorithms?
+			- Ví dụ với việc tìm số lớn nhất MAX trong 1 array, ArrayList, LinkedList, có thể có nhiều phương thức khác nhau để tìm Max. Tuy nhiên, bạn
+				không muốn triển khai 1 loạt các phương thức theo kiểu:
+				static <T extends Comparable> T max(T[] a)
+				static <T extends Comparable> T max(ArrayList<T> v)
+				static <T extends Comparable> T max(LinkedList<T> l)
+				-> Do đó, bạn có thể triển khai phương thức max để nhận bất kỳ đối tượng nào thực hiện giao diện Collection theo kiểu Generic
+				public static <T extends Comparable> T max(Collection<T> c)
+					{
+   						if (c.isEmpty()) throw new NoSuchElementException();
+   						Iterator<T> iter = c.iterator();
+   						T largest = iter.next();   while (iter.hasNext())
+   						{
+      							T next = iter.next();
+      							if (largest.compareTo(next) < 0)
+         								largest = next;
+   						}
+   						return largest;
+					}
+				Bây giờ bạn có thể tính toán giá trị lớn nhất của một LinkedList, một ArrayList, hoặc một Array, với một phương thức duy nhất.
+		2. Sorting and Shuffling
+			- Thuật toán Sort được sử dụng trong thư viện collections chậm hơn một chút so với Quick-Sort
+			- Các Collection không cần phải triển khai tất cả các phương thức "optional" của chúng
+			-> vì vậy tất cả các phương thức nhận tham số là 1 Collection phải mô tả khi nào thì an toàn để truyền một Collection cho một thuật toán. 
+				Ví dụ, bạn rõ ràng không thể truyền một danh sách unmodifiableList cho thuật toán sắp xếp. 
+			Bạn có thể truyền loại danh sách nào? Theo tài liệu, danh sách phải có thể thay đổi nhưng không cần phải có khả năng thay đổi kích thước.
+			- Shuffling:
+				Lớp Collections có một thuật toán trộn mà thực hiện ngược lại với việc sắp xếp - nó hoán vị ngẫu nhiên thứ tự của các phần tử trong một danh sách. Ví dụ: 
+				ArrayList<Card> cards = . . .;
+				Collections.shuffle(cards);
+			
 
 			
 
