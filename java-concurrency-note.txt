@@ -1,0 +1,25 @@
+Chapter 12. Concurrency
+- What is Concurrency ?
+	- 
+4.
+	3. Lock Objects
+		cơ bản để bảo vệ một khối mã bằng ReentrantLock
+			myLock.lock(); // a ReentrantLock object
+				try
+					{
+						critical section
+					}
+				finally
+					{
+						myLock.unlock(); // make sure the lock is unlocked even if an exception is thrown
+					}
+		- Cấu trúc này đảm bảo rằng chỉ một luồng tại một thời điểm có thể vào phần quan trọng
+			Ngay khi một luồng khóa đối tượng khóa, không có luồng nào khác có thể đi qua câu lệnh khóa. Khi các luồng khác gọi khóa, chúng sẽ bị tắt cho đến khi luồng đầu tiên mở khóa đối tượng khóa.
+			Điều quan trọng là thao tác mở khóa phải được đặt trong một khối finally. Nếu mã trong phần quan trọng ném ra một ngoại lệ, khóa phải được mở. Nếu không, các luồng khác sẽ bị chặn mãi mãi.
+	4. Condition Objects
+	5. The synchronized Keyword
+	    - Điểm qua về Lock và Condition
+	        Lock bảo vệ các phần của mã, cho phép chỉ một luồng thực thi mã tại một thời điểm.
+	        Lock quản lý các luồng đang cố gắng vào một đoạn mã được bảo vệ.
+	        Lock có thể có một hoặc nhiều đối tượng điều kiện liên quan.
+	        Mỗi condition quản lý các luồng đã vào một phần mã được bảo vệ nhưng không thể tiếp tục (do không pass điều kiện).

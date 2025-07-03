@@ -296,8 +296,43 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
 				Lớp Collections có một thuật toán trộn mà thực hiện ngược lại với việc sắp xếp - nó hoán vị ngẫu nhiên thứ tự của các phần tử trong một danh sách. Ví dụ: 
 				ArrayList<Card> cards = . . .;
 				Collections.shuffle(cards);
-			
+		3. Binary search
+		      Để tìm một đối tượng trong một mảng, bạn thường truy cập tất cả các phần tử cho đến khi tìm thấy một kết một.
+		      Tuy nhiên, nếu mảng đã được sắp xếp, bạn có thể xem phần tử ở giữa và kiểm tra xem nó có lớn hơn phần tử mà bạn đang cố gắng tìm hay không.
+		      Nếu có, hãy tiếp tục tìm kiếm ở nửa đầu của mảng; nếu không, hãy tìm ở nửa sau.
+		      Điều này giúp thu gọn vấn đề lại một nửa, và bạn tiếp tục theo cách tương tự.
+		      Phương thức binarySearch của lớp Collections thực hiện thuật toán này. Lưu ý rằng bộ sưu tập phải đã được sắp xếp trước, nếu không thuật toán sẽ trả về kết quả sai.
+		4. Simple Algorithms
+		    - Lớp Collections chứa một số thuật toán đơn giản nhưng hữu ích.
+		    Trong số đó có ví dụ từ đầu phần này - tìm giá trị lớn nhất của một tập hợp.
+		    Những thuật toán khác bao gồm sao chép các phần tử từ một List sang List khác, điền một container bằng một giá trị cố định, và đảo ngược một danh sách.
+		    - Tại sao lại cung cấp những thuật toán cơ bản như vậy trong 1 thư viện chuẩn ?
+		        - dễ dàng hơn cho lập trình viên khi đọc mã
+			    - Ví dụ, hãy nhìn vào vòng lặp này: for (int i = 0; i < words.size(); i++) if (words.get(i).equals("C++")) words.set(i, "Java"); Bây giờ so sánh vòng lặp với lệnh gọi Collections.replaceAll(words, "C++", "Java");
+			        Khi bạn thấy lệnh gọi phương thức, ngay lập tức bạn biết mã này làm gì
+            - Collection.removeIf và List.replaceAll phức tạp hơn một chút. Bạn cung cấp một biểu thức lambda (Predicate & UnaryOperator) để kiểm tra hoặc biến đổi các phần tử. Ví dụ, ở đây chúng tôi loại bỏ tất cả các từ ngắn và thay đổi những từ còn lại thành chữ thường.
+                words.removeIf(w -> w.length() <= 3);
+                words.replaceAll(String::toLowerCase);
+        5. Bulk Operations
+            - Có một số thao tác sao chép hoặc xóa phần tử "hàng loạt" - In bulk.
+            - Ex: coll1.removeAll(coll2); sẽ xóa tất cả các phần tử từ coll1 mà có trong coll2. Ngược lại, coll1.retainAll(coll2); sẽ xóa tất cả các phần tử từ coll1 mà không có trong coll2
+            - Có thể ứng dụng khi cần xóa 1 tập hợp Employee đã nghỉ việc bằng cách:
+                - Map<String, Employee> staffMap = . . .; // giả sử bạn có một bản đồ ánh xạ mã nhân viên tới các đối tượng nhân viên.
+                  Set<String> terminatedIDs = . . .; // và bạn có một tập hợp các mã ID của tất cả nhân viên sẽ bị sa thải
+                - staffMap.keySet().removeAll(terminatedIDs);
+        6. Converting between Collections and Arrays
+            - Nếu bạn có một mảng mà bạn cần chuyển thành một tập hợp, phương thức List.of phục vụ mục đích này. Ví dụ:
+                String[] names = . . .;
+                List<String> staff = List.of(names);
+            - Lấy một mảng từ một collection thì hơi phức tạp một chút. Bạn có thể sử dụng phương thức toArray: Object[] names = staff.toArray();
+                - Nhưng kết quả là một mảng các đối tượng. Ngay cả khi bạn biết rằng tập hợp của bạn chứa các đối tượng của một loại cụ thể, bạn không thể sử dụng ép kiểu: String[] names = (String[]) staff.toArray(); // LỖI
+                - Mảng được trả về bởi phương thức toArray được tạo ra dưới dạng mảng Object[], và bạn không thể thay đổi kiểu của nó.
+                - Thay vào đó, hãy truyền một biểu thức khởi tạo mảng vào phương thức toArray. Mảng được trả về sau đó sẽ được tạo ra dưới dạng kiểu mảng đúng:
+                    >String[] values = staff.toArray(String[]::new)
+        7. Writing Your Own Algorithms
+            -
+   	7. Legacy Collections
 
-			
+
 
 

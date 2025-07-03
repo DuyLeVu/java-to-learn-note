@@ -1,6 +1,6 @@
 package concurrency.synchronization;
 
-import concurrency.threads.Bank;
+import concurrency.synchronization.synch.Bank;
 
 public class UnsynchBankTest {
 public static final int ACCOUNTS = 1000;
