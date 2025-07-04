@@ -332,7 +332,9 @@ Hãy đưa ra 1 vài bài tập để thực hành phần generic này, cụ th�
         7. Writing Your Own Algorithms
             -
    	7. Legacy Collections
-
-
-
-
+   	    1. The Hashtable Class
+   	        - Lớp Hashtable cổ điển phục vụ cùng một mục đích như lớp HashMap và về cơ bản có cùng một giao diện
+   	        - Giống như các phương thức của lớp Vector, các phương thức của Hashtable là đồng bộ.
+   	        - Nếu bạn không yêu cầu tính tương thích với Legacy code, bạn nên sử dụng HashMap thay thế.
+   	        - bạn cần truy cập đồng thời, hãy sử dụng ConcurrentHashMap
+   	    2. Enumerations
