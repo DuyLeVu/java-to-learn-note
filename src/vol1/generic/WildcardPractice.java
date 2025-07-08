@@ -1,4 +1,4 @@
-package generic;
+package vol1.generic;
 //
 //import java.util.List;
 //import java.util.Objects;

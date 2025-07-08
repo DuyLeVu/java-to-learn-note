@@ -1,4 +1,4 @@
-package chapter_6;
+package vol1.chapter_6;
 
 public class LambdaToLearn {
     //    Bài 4: Xử lý chuỗi với transform()
