@@ -1,0 +1,41 @@
+1. Streams
+	1. From Iterating to Stream Operations
+	    -  Tác giả bắt đầu bằng việc so sánh cách xử lý dữ liệu truyền thống bằng vòng lặp (for) với cách làm hiện đại hơn bằng Stream API trong Java
+	        - Cách viết bằng vòng lặp diễn tả quá chi tiết cách thực hiện công việc.
+	        - Cách viết bằng Stream API tập trung vào mục đích công việc – tức là: làm gì (nói ra điều bạn muốn làm), không phải làm như thế nào.
+	    - Tăng tốc bằng .parallelStream(): tự động chia công việc xử lý nhiều lõi CPU ⇒ giúp chương trình nhanh hơn với dữ liệu lớn.
+	    - So sánh Collection và Stream:
+	    | Tiêu chí             | Collection                             | Stream                                          |
+        | -------------------- | -------------------------------------- | ----------------------------------------------- |
+        | Lưu trữ dữ liệu      | Có (dữ liệu nằm trong list, set, v.v.) | Không lưu, chỉ là luồng xử lý                   |
+        | Thay đổi dữ liệu gốc | Có thể (`add`, `remove`, ...)          | Không — không thay đổi nguồn                    |
+        | Thực thi ngay        | Có                                     | **Lazy** — chỉ chạy khi có "terminal operation" |
+        | Có thể vô hạn không? | Không                                  | Có — ví dụ `Stream.generate(...)`               |
+
+        - Cấu trúc của một thao tác với Stream (gọi là pipeline):
+            1. Tạo Stream: stream() hoặc parallelStream()
+            2. Thao tác trung gian (intermediate operations): filter, map, sorted, v.v.
+            3. Thao tác kết thúc (terminal operation): count, collect, forEach, ...
+            -> Chỉ khi bước 3 được gọi thì các bước trung gian mới thực sự thực thi.
+        - Đặt điểm của Stream:
+            | Đặc điểm                            | Diễn giải                                                                                                          |
+            | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+            | **Stream không lưu trữ**            | Nó hoạt động như một pipeline (dòng chảy), không giữ kết quả. Dữ liệu có thể đến từ Collection hoặc tạo ra từ đầu. |
+            | **Không thay đổi dữ liệu gốc**      | `.filter()` chỉ tạo stream mới, không xóa khỏi `words`.                                                            |
+            | **Lazy evaluation (Thực thi lười)** | Stream chỉ chạy khi có “terminal operation” như `.count()` hoặc `.collect()`.                                      |
+            | **Có thể là vô hạn**                | Stream có thể xử lý dữ liệu vô hạn, miễn là điều kiện dừng rõ ràng.                                                |
+
+
+        - Tổng kết: Stream API là công cụ xử lý dữ liệu kiểu mới, giúp viết code ngắn gọn, rõ nghĩa, dễ tối ưu hóa.
+            Stream hoạt động theo mô hình pipeline gồm 3 bước:
+                Tạo stream từ dữ liệu gốc (stream(), parallelStream())
+                Thực hiện các thao tác trung gian (filter, map, sorted, ...) (transform)
+                Kết thúc và trả về kết quả (terminal operation)
+            Uu điểm:
+                Stream không lưu dữ liệu, không thay đổi nguồn
+                Thực thi lười (lazy), chỉ chạy khi cần
+                Dễ dàng song song hóa bằng .parallelStream().
+                Ưu điểm lớn: viết code ngắn gọn, diễn đạt “làm gì” thay vì “làm như thế nào”, dễ bảo trì, dễ đọc, dễ mở rộng.
+                Có thể dùng cho nguồn dữ liệu vô hạn
+
+
