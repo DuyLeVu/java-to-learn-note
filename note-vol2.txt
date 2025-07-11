@@ -26,7 +26,7 @@
             | **Có thể là vô hạn**                | Stream có thể xử lý dữ liệu vô hạn, miễn là điều kiện dừng rõ ràng.                                                |
 
 
-        - Tổng kết: Stream API là công cụ xử lý dữ liệu kiểu mới, giúp viết code ngắn gọn, rõ nghĩa, dễ tối ưu hóa.
+        - Tổng kết:
             Stream hoạt động theo mô hình pipeline gồm 3 bước:
                 Tạo stream từ dữ liệu gốc (stream(), parallelStream())
                 Thực hiện các thao tác trung gian (filter, map, sorted, ...) (transform)
@@ -37,5 +37,147 @@
                 Dễ dàng song song hóa bằng .parallelStream().
                 Ưu điểm lớn: viết code ngắn gọn, diễn đạt “làm gì” thay vì “làm như thế nào”, dễ bảo trì, dễ đọc, dễ mở rộng.
                 Có thể dùng cho nguồn dữ liệu vô hạn
+        - Practice: “Không phải cứ Stream là hiện đại, không phải cứ Parallel là nhanh.”
+            -> Khi chạy demo đếm từ trên 1 tập dữ liệu nhỏ, kết quả là for < (nhanh hơn) Stream < Parallel Stream về tốc độ
+            1. “Dùng công cụ đúng chỗ” quan trọng hơn là “dùng công cụ hiện đại”
+                Stream và parallelStream rất mạnh, nhưng không phải lúc nào cũng tốt hơn for truyền thống.
 
+                Với dữ liệu nhỏ, dùng for đơn giản, nhanh, không overhead.
+                → Đừng cố “Stream hóa” mọi thứ một cách máy móc.
+            2. parallelStream() không phải là “tăng tốc miễn phí”
+                parallelStream() không nên dùng cho tập dữ liệu nhỏ hoặc khi mỗi phần tử xử lý rất nhẹ.
+                Vì chi phí phân chia công việc và gom kết quả còn lớn hơn bản thân công việc ⇒ gây chậm.
+                📌 Chỉ nên dùng khi:
+                    - Dữ liệu lớn (hàng trăm nghìn → hàng triệu phần tử)
+                    - Hoặc thao tác nặng (I/O, tính toán phức tạp)
+            3. Luôn đánh đổi giữa: Độ rõ ràng – Hiệu năng – Khả năng mở rộng
+            | Cách làm           | Rõ ràng    | Hiệu năng               | Dễ mở rộng                                    |
+            | ------------------ | ---------- | ----------------------- | --------------------------------------------- |
+            | `for` loop         | Trung bình | Rất cao với dữ liệu nhỏ | Thấp, phải viết lại nếu logic thay đổi        |
+            | `stream()`         | Cao        | Ổn định                 | Cao (dễ thêm `.filter()`, `.map()`…)          |
+            | `parallelStream()` | Cao        | Chỉ tốt với dữ liệu lớn | Trung bình (dễ bug race nếu dùng sai context) |
 
+            -> Bạn cần chọn đúng công cụ dựa trên ngữ cảnh cụ thể chứ không nên theo phong trào hay "code cho đẹp".
+                - Tư duy phân tích trước khi chọn kỹ thuật, và luôn test với dữ liệu đại diện cho môi trường thực tế (production-size data).
+    2. Stream Creation
+        Stream không chỉ đến từ Collection như List, Set, mà còn có thể:
+            tạo từ mảng,
+            từ giá trị cụ thể (literal),
+            từ file,
+            từ API tạo dữ liệu vô hạn như Stream.generate() hoặc Stream.iterate().
+        - các cách tạo ra một Stream từ nhiều nguồn khác nhau trong Java.
+            - Tạo Stream từ Collection (phổ biến nhất)
+              Stream<String> stream = list.stream();
+              -> Đây là cách thường thấy nhất khi xử lý dữ liệu từ danh sách (List, Set).
+            - Tạo Stream từ mảng:
+                Stream<String> stream = Arrays.stream(array);
+                → Sử dụng Arrays.stream(...) là cách tốt nhất để tạo stream từ mảng có sẵn.
+            - Tạo Stream từ các giá trị cụ thể (literal)
+                Stream<String> stream = Stream.of("Java", "Python", "Go");
+                → Dùng Stream.of(...) để nhanh chóng tạo stream từ các phần tử đơn lẻ.
+            - Tạo Stream vô hạn (infinite streams)
+                1. Stream.generate() – dựa trên supplier (không có trạng thái)
+                    Stream<Double> randoms = Stream.generate(Math::random);
+                    → Tạo ra các số ngẫu nhiên liên tục, vô hạn.
+                2. Stream.iterate() – dựa trên seed và function lặp
+                    Stream<Integer> numbers = Stream.iterate(0, n -> n + 1);
+                    → Tạo chuỗi số đếm từ 0 trở đi, vô hạn.
+                    Bạn nên dùng thêm .limit(n) để giới hạn số phần tử tránh bị lặp vô tận.
+                    Stream<Integer> top10 = Stream.iterate(0, n -> n + 1).limit(10);
+            - Tạo Stream từ file văn bản
+                try (Stream<String> lines = Files.lines(Path.of("data.txt"))) {
+                    lines.forEach(System.out::println);
+                }
+                → Mỗi dòng trong file sẽ là một phần tử trong Stream<String>.
+                ⚠️ Lưu ý: stream này cần được đóng lại (dùng try-with-resources).
+            - Tạo Stream từ Pattern.splitAsStream(...)
+                String text = "apple, banana, cherry";
+                Stream<String> stream = Pattern.compile(",\\s*").splitAsStream(text);
+    3. Intermediate Stream Operations - The filter, map, and flatMap Methods
+        - các thao tác trung gian (intermediate operations) trong Stream API, là những thao tác biến đổi hoặc chọn lọc dữ liệu trong pipeline stream, nhưng không trả về kết quả cuối cùng. Thay vào đó, mỗi thao tác trung gian trả về một Stream mới để có thể tiếp tục nối chuỗi các thao tác tiếp theo.
+        - Các thao tác trung gian không thực thi ngay, mà sẽ chờ đến khi có thao tác kết thúc (terminal) mới thực sự chạy – đây là bản chất của lazy evaluation.
+        - Các thao tác tiêu biểu: filter(...)
+                                  map(...)
+                                  flatMap(...)
+                                  sorted(...)
+                                  distinct()
+        - filter(Predicate<T>):
+            - Tác dụng: Lọc ra các phần tử thỏa mãn điều kiện cho trước.
+            - Trả về: Một Stream chỉ chứa các phần tử được giữ lại.
+            Stream<String> longWords = words.stream()
+                .filter(w -> w.length() > 12);
+            📌 → Giữ lại các từ dài hơn 12 ký tự.
+        - map(Function<T, R>):
+            Tác dụng: Ánh xạ từng phần tử sang một giá trị khác.
+            Trả về: Stream mới chứa các giá trị sau biến đổi.
+            Stream<Integer> wordLengths = words.stream()
+                .map(String::length);
+            📌 → Chuyển mỗi từ thành độ dài của từ đó → từ String → Integer.
+            Ví dụ 2: Chuyển Student thành student.name
+            Stream<Student> students = ...;
+            Stream<String> names = students.map(Student::getName);
+            → Rất hay dùng khi bạn muốn trích xuất trường cụ thể từ đối tượng.
+        - sorted() hoặc sorted(Comparator<T>)
+          Tác dụng: Sắp xếp các phần tử.
+          Trả về: Stream đã được sắp xếp theo:
+            - Tự nhiên (nếu phần tử implement Comparable)
+            - Hoặc theo thứ tự custom (truyền vào Comparator)
+             Ví dụ:
+            words.stream()
+                .sorted()
+                .forEach(System.out::println);
+            words.stream()
+                .sorted(Comparator.comparingInt(String::length))
+                .forEach(System.out::println);
+            📌 → Ví dụ 1: sắp xếp theo từ điển; Ví dụ 2: sắp xếp theo độ dài.
+        - distinct()
+          Tác dụng: Loại bỏ các phần tử trùng nhau.
+          Trả về: Stream duy nhất hóa phần tử (dựa theo equals()).
+          Ví dụ:
+          List<String> uniqueWords = words.stream()
+              .distinct()
+              .collect(Collectors.toList());
+          📌 → Từ một danh sách từ có thể lặp lại, tạo ra list chứa từ duy nhất.
+        - flatMap(Function<T, Stream<R>>): giống map() nhưng đi xa hơn — chuyển mỗi phần tử thành một Stream mới, rồi làm phẳng (flatten) tất cả lại thành một stream duy nhất.
+            Tác dụng: flatMap() cực kỳ hữu ích trong các trường hợp dữ liệu lồng nhau như: list của list, dòng văn bản thành từ, hoặc stream của stream.
+            Tác dụng: Mỗi phần tử được chuyển đổi thành Stream, sau đó gộp toàn bộ stream con lại thành 1 stream phẳng.
+            🔹 Ví dụ 1: Tách mỗi dòng thành nhiều từ
+            List<String> lines = List.of("hello world", "java stream");
+
+            Stream<String> words = lines.stream()
+                .flatMap(line -> Arrays.stream(line.split(" ")));
+
+            words.forEach(System.out::println);
+            Nếu dùng map(), bạn sẽ được Stream<Stream<String>>, nghĩa là stream lồng stream — rất khó xử lý tiếp.
+            ➡️ flatMap() giúp “làm phẳng” stream thành Stream<String>.
+        - Ví dụ tổng hợp:
+        List<Integer> result = words.stream()
+            .filter(w -> w.length() > 5)
+            .map(String::length)
+            .distinct()
+            .sorted()
+            .collect(Collectors.toList());
+        Giải thích:
+        Lọc ra từ dài hơn 5
+        Chuyển mỗi từ thành độ dài
+        Loại bỏ độ dài trùng nhau
+        Sắp xếp tăng dần
+        Thu kết quả về List
+    4. Extracting Substreams and Combining Streams
+        1. Trích xuất một phần stream (substream) — để lấy ra một đoạn dữ liệu con từ stream gốc, thông qua các phương thức như:
+            limit(n) - Giữ lại n phần tử đầu tiên - Ex: Stream<String> first5 = words.stream().limit(5); → Trả về 5 từ đầu tiên trong danh sách words.
+            skip(n) - Bỏ qua n phần tử đầu tiên - Ex: Stream<String> rest = words.stream().skip(5); → Bỏ 5 từ đầu tiên, giữ lại phần còn lại.
+            takeWhile(predicate): Giữ lại phần tử từ đầu stream miễn là điều kiện đúng.
+                                  Dừng ngay khi gặp phần tử đầu tiên không thỏa mãn
+                                  Ex: Stream<String> shortWords = words.stream().takeWhile(w -> w.length() < 5);
+                                      📌 → Nếu từ đầu danh sách là những từ ngắn, nó sẽ giữ lại đến khi gặp từ dài đầu tiên.
+            dropWhile(predicate): Bỏ qua phần tử từ đầu stream miễn là điều kiện đúng, giữ lại phần sau.
+                                  Stream<String> restWords = words.stream()
+                                      .dropWhile(w -> w.length() < 5);
+                                  → Ngược lại với takeWhile: bỏ đến khi gặp từ đầu tiên dài ≥ 5.
+            🔎 Cặp takeWhile và dropWhile hoạt động hiệu quả nhất với Stream đã sắp xếp, hoặc có thứ tự logic cụ thể.
+        2. Kết hợp nhiều stream lại với nhau — để tạo thành một stream duy nhất, thông qua:
+            Stream.concat(a, b): Ghép hai stream thành một
+                Stream<String> combined = Stream.concat(streamA, streamB);
+                📌 → Dữ liệu từ streamA sẽ đứng trước, sau đó là streamB.
+            Hoặc kết hợp nhiều stream bằng flatMap(...)
