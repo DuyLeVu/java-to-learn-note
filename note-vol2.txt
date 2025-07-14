@@ -130,6 +130,7 @@
                 .sorted(Comparator.comparingInt(String::length))
                 .forEach(System.out::println);
             📌 → Ví dụ 1: sắp xếp theo từ điển; Ví dụ 2: sắp xếp theo độ dài.
+             Lưu ý: sorted() sắp xếp toàn bộ stream, do đó có thể tốn bộ nhớ và thời gian nếu stream rất lớn.
         - distinct()
           Tác dụng: Loại bỏ các phần tử trùng nhau.
           Trả về: Stream duy nhất hóa phần tử (dựa theo equals()).
@@ -158,11 +159,11 @@
             .sorted()
             .collect(Collectors.toList());
         Giải thích:
-        Lọc ra từ dài hơn 5
-        Chuyển mỗi từ thành độ dài
-        Loại bỏ độ dài trùng nhau
-        Sắp xếp tăng dần
-        Thu kết quả về List
+            Lọc ra từ dài hơn 5
+            Chuyển mỗi từ thành độ dài
+            Loại bỏ độ dài trùng nhau
+            Sắp xếp tăng dần
+            Thu kết quả về List
     4. Extracting Substreams and Combining Streams
         1. Trích xuất một phần stream (substream) — để lấy ra một đoạn dữ liệu con từ stream gốc, thông qua các phương thức như:
             limit(n) - Giữ lại n phần tử đầu tiên - Ex: Stream<String> first5 = words.stream().limit(5); → Trả về 5 từ đầu tiên trong danh sách words.
@@ -181,3 +182,48 @@
                 Stream<String> combined = Stream.concat(streamA, streamB);
                 📌 → Dữ liệu từ streamA sẽ đứng trước, sau đó là streamB.
             Hoặc kết hợp nhiều stream bằng flatMap(...)
+    5. Other Stream Transformations - những thao tác biến đổi stream khác
+        Các phương thức này vẫn thuộc nhóm intermediate operations (thao tác trung gian), dùng để:
+            sắp xếp lại dữ liệu
+            loại bỏ dữ liệu dư thừa
+            thực hiện thao tác side-effect (trong quá trình xử lý)
+        Cụ thể, tác giả trình bày một số phương thức tiêu biểu:
+            distinct()
+                Mục đích:
+                Loại bỏ các phần tử trùng nhau (dựa vào equals()).
+                Ex: Stream<String> stream = Stream.of("a", "b", "a", "c", "b");
+                    stream.distinct().forEach(System.out::println);
+
+            peek()
+                Mục đích:
+                Chèn hành vi phụ (side-effect) vào pipeline để theo dõi (debug) hoặc ghi log, mà không làm thay đổi stream
+                Ex: Stream<String> result = words.stream()
+                        .filter(w -> w.length() > 5)
+                        .peek(w -> System.out.println("Filtered: " + w))
+                        .map(String::toUpperCase)
+                        .peek(w -> System.out.println("Mapped: " + w));
+                 peek() dùng để xem bên trong pipeline, không thay đổi dữ liệu.
+
+                ⚠️ Không nên dùng để xử lý chính (như lưu database), vì peek() chỉ chạy nếu có terminal operation.
+
+
+            mapToInt, mapToDouble, mapToLong (primitive streams)
+                 Mục đích:
+                Chuyển từ Stream<T> sang stream nguyên thủy (IntStream, DoubleStream, LongStream) để tối ưu hiệu suất và truy cập các hàm đặc biệt như sum(), average(), min()..
+                Ex: IntStream lengths = words.stream()
+                        .mapToInt(String::length);
+
+                    double avg = words.stream()
+                        .mapToInt(String::length)
+                        .average()
+                        .orElse(0);
+                    Dùng IntStream thay vì Stream<Integer> giúp tránh autoboxing → hiệu suất cao hơn nhiều.
+            boxed()
+                🔹 Mục đích: Chuyển ngược từ stream nguyên thủy sang stream đối tượng.
+                Stream<Integer> boxed = IntStream.range(1, 5).boxed();
+                hữu ích khi bạn cần dùng lại các thao tác cho Stream<T> như collect().
+
+
+            Và các thao tác chuyển đổi giữa stream đối tượng và stream kiểu nguyên thủy
+
+
