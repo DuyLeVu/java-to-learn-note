@@ -1,4 +1,4 @@
-package concurrency.synchronization.practice.config;
+package concurrency.synchronization.practice.on_demand_initialization.config;
 
 import java.io.IOException;
 import java.io.InputStream;

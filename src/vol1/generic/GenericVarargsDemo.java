@@ -1,6 +1,7 @@
 package vol1.generic;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 public class GenericVarargsDemo {
   @SafeVarargs
@@ -32,6 +33,18 @@ class Pair<T> {
   public Pair(T first, T second) {
     this.first = first;
     this.second = second;
+  }
+
+//  Instantiate Type Variables
+  public static <T> Pair<T> makePair(Supplier<T> constr) {
+    return new Pair<>(constr.get(), constr.get());
+  }
+
+  public static <T> Pair<T> makePair2(Class<T> cl) {
+    try {
+      return new Pair<>(cl.getConstructor().newInstance(), cl.getConstructor().newInstance());
+    }
+    catch (Exception ex) {return null;}
   }
 
   public String toString() {
