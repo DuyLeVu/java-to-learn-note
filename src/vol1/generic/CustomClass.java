@@ -1,4 +1,4 @@
-package vol1.generic.practice;
+package vol1.generic;
 
 public class CustomClass {
   private static int counter = 0;

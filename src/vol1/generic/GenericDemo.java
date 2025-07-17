@@ -7,6 +7,9 @@ public class GenericDemo {
 //    String.class là đối tượng Class<String>.
 //    Java sẽ tìm constructor không tham số của String rồi gọi newInstance() hai lần.
     System.out.println(p); // Output: ("", "")
+
+    Pair<CustomClass> customPair = Pair.makePair2(CustomClass.class);
+    System.out.println("Pair<CustomClass>: " + customPair);
   }
 
 }
