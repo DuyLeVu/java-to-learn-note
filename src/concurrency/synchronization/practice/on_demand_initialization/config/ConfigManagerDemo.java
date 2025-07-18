@@ -1,4 +1,4 @@
-package concurrency.synchronization.practice.config;
+package concurrency.synchronization.practice.on_demand_initialization.config;
 
 public class ConfigManagerDemo {
   public static void main(String[] args) {

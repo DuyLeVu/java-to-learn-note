@@ -1,4 +1,4 @@
-package concurrency;
+package concurrency.introduce;
 
 public class MultiThreadTest {
   public static void main(String[] args) {
