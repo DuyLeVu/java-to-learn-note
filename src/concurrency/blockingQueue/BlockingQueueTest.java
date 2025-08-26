@@ -29,6 +29,7 @@ public class BlockingQueueTest {
         } catch (IOException e) {
           e.printStackTrace();
         } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
         }
       };
 
@@ -47,6 +48,7 @@ public class BlockingQueueTest {
           } catch (IOException e) {
             e.printStackTrace();
           } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
           }
         };
         new Thread(searcher).start();
