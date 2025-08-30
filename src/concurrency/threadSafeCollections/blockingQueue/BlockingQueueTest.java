@@ -1,4 +1,4 @@
-package concurrency.blockingQueue;
+package concurrency.threadSafeCollections.blockingQueue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
