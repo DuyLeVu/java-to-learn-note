@@ -1,4 +1,4 @@
-package concurrency.blockingQueue;
+package concurrency.threadSafeCollections.chm;
 
 import java.io.IOException;
 import java.nio.file.Files;
